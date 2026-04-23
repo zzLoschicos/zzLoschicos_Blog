@@ -2,7 +2,10 @@ import { resolve } from "node:path";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import type { NextConfig } from "next";
 
-void initOpenNextCloudflareForDev();
+// Only initialize Cloudflare dev proxy when running locally with wrangler
+if (process.env.NODE_ENV === "development" && process.env.WRANGLER_DEV === "1") {
+  void initOpenNextCloudflareForDev();
+}
 
 const nextConfig: NextConfig = {
   // 图片优化（Cloudflare 有自己的优化）
