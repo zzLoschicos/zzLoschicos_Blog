@@ -1,35 +1,36 @@
-  name = "qiaomu-blog-opensource"
-  main = "worker.ts"
-  account_id = "7ed5760ee6161c017faa254e147c3143"
-  compatibility_date = "2026-04-14"
-  compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+name = "qiaomu-blog-opensource"
+main = "worker.ts"
+account_id = "7ed5760ee6161c017faa254e147c3143"
+compatibility_date = "2026-04-14"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+workers_compress = true
 
-  [dev]
-  port = 8788
+[dev]
+port = 8788
 
-  [assets]
-  directory = ".open-next/assets"
-  binding = "ASSETS"
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
-  [ai]
-  binding = "WORKERS_AI"
+[ai]
+binding = "WORKERS_AI"
 
-  [[services]]
-  binding = "WORKER_SELF_REFERENCE"
-  service = "qiaomu-blog-opensource"
+[[services]]
+binding = "WORKER_SELF_REFERENCE"
+service = "qiaomu-blog-opensource"
 
-  [[d1_databases]]
-  binding = "DB"
-  database_name = "qiaomu-blog-db"
-  database_id = "84a14208-c69a-49ef-8a2c-f809e2482e31"
-  remote = true
+[[d1_databases]]
+binding = "DB"
+database_name = "qiaomu-blog-db"
+database_id = "84a14208-c69a-49ef-8a2c-f809e2482e31"
+remote = true
 
-  [[r2_buckets]]
-  binding = "IMAGES"
-  bucket_name = "qiaomu-blog-images"
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "qiaomu-blog-images"
 
-  [vars]
-  NEXT_PUBLIC_SITE_URL = "https://zzloschicos-blog.workers.dev"
-  AI_BASE_URL = "https://api.openai.com/v1"
-  AI_MODEL = "gpt-4o-mini"
-  WORKERS_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct"
+[vars]
+NEXT_PUBLIC_SITE_URL = "https://zzloschicos-blog.workers.dev"
+AI_BASE_URL = "https://api.openai.com/v1"
+AI_MODEL = "gpt-4o-mini"
+WORKERS_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct"
