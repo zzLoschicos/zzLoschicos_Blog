@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -24,15 +24,54 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and Deploy
-        run: |
-          npm run build
+      - name: Build Next.js
+        run: npx next build
+        env:
+          CI: 'true'
+          NEXT_TELEMETRY_DISABLED: '1'
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            .next/
+            !node_modules/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install OpenNext Cloudflare
+        run: npm install @opennextjs/cloudflare opennextjs-cloudflare
+
+      - name: Build for Cloudflare
+        run: npx opennextjs-cloudflare build
         env:
           CI: 'true'
           NEXT_TELEMETRY_DISABLED: '1'
 
       - name: Deploy to Cloudflare
-        run: npm run deploy
+        run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
